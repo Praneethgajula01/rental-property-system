@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/properties")
@@ -14,7 +15,7 @@ public class PropertyController {
     public PropertyController(PropertyService service) { this.service = service; }
 
     @PostMapping
-    public ResponseEntity<Property> add(@RequestBody Property p){
+    public ResponseEntity<Property> add(@RequestBody @NonNull Property p){
         return ResponseEntity.ok(service.add(p));
     }
 
@@ -24,8 +25,15 @@ public class PropertyController {
     @GetMapping("/available")
     public ResponseEntity<List<Property>> available(){ return ResponseEntity.ok(service.available()); }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Property> getById(@PathVariable @NonNull Long id){
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/{id}/book")
-    public ResponseEntity<Property> book(@PathVariable Long id){
+    public ResponseEntity<Property> book(@PathVariable @NonNull Long id){
         return ResponseEntity.ok(service.book(id));
     }
 }

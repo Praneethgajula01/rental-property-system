@@ -1,11 +1,11 @@
 # Use an official Java runtime as base image
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Copy your built jar file into the container
-COPY target/*.jar app.jar
+COPY target/rental-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose port 8080 (Spring Boot default)
 EXPOSE 8080

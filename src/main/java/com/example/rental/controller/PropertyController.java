@@ -20,7 +20,13 @@ public class PropertyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Property>> all(){ return ResponseEntity.ok(service.all()); }
+    public ResponseEntity<List<Property>> all(){ return ResponseEntity.ok(service.allApproved()); }
+
+    @GetMapping("/admin/all")
+    public ResponseEntity<List<Property>> allForAdmin(){ return ResponseEntity.ok(service.allForAdmin()); }
+
+    @GetMapping("/admin/pending")
+    public ResponseEntity<List<Property>> pendingForAdmin(){ return ResponseEntity.ok(service.pendingForAdmin()); }
 
     @GetMapping("/available")
     public ResponseEntity<List<Property>> available(){ return ResponseEntity.ok(service.available()); }
@@ -35,6 +41,16 @@ public class PropertyController {
     @PostMapping("/{id}/book")
     public ResponseEntity<Property> book(@PathVariable @NonNull Long id){
         return ResponseEntity.ok(service.book(id));
+    }
+
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<Property> approve(@PathVariable @NonNull Long id){
+        return ResponseEntity.ok(service.approve(id));
+    }
+
+    @PostMapping("/{id}/reject")
+    public ResponseEntity<Property> reject(@PathVariable @NonNull Long id){
+        return ResponseEntity.ok(service.reject(id));
     }
 }
 

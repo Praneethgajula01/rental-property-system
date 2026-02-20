@@ -29,11 +29,15 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll() // Open for login/register
                 .requestMatchers("/properties/admin/**").hasRole("ADMIN")
+                .requestMatchers("/bookings/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/properties/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/properties").hasAnyRole("ADMIN", "HOST")
-                .requestMatchers(HttpMethod.POST, "/properties/*/book").authenticated()
                 .requestMatchers(HttpMethod.POST, "/properties/*/approve").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/properties/*/reject").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/bookings").authenticated()
+                .requestMatchers(HttpMethod.GET, "/bookings/my").authenticated()
+                .requestMatchers(HttpMethod.POST, "/bookings/*/confirm").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/bookings/*/cancel").authenticated()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll() // Open for Swagger
                 .anyRequest().authenticated() // All other requests need token
             )

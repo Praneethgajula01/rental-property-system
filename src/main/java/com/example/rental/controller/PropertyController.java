@@ -38,11 +38,6 @@ public class PropertyController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{id}/book")
-    public ResponseEntity<Property> book(@PathVariable @NonNull Long id){
-        return ResponseEntity.ok(service.book(id));
-    }
-
     @PostMapping("/{id}/approve")
     public ResponseEntity<Property> approve(@PathVariable @NonNull Long id){
         return ResponseEntity.ok(service.approve(id));

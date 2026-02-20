@@ -39,21 +39,6 @@ public class PropertyService {
 
     public Optional<Property> findById(@NonNull Long id) { return repo.findById(id); }
 
-    public @NonNull Property book(@NonNull Long id) {
-        Property p = repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Property not found"));
-
-        if (p.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Property is not approved for booking");
-        }
-        if (!p.isAvailable()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Property is already unavailable");
-        }
-
-        p.setAvailable(false);
-        return repo.save(p);
-    }
-
     public @NonNull Property approve(@NonNull Long id) {
         Property p = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Property not found"));

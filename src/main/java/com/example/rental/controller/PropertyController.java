@@ -3,6 +3,8 @@ package com.example.rental.controller;
 import com.example.rental.dto.PagedResponse;
 import com.example.rental.model.Property;
 import com.example.rental.service.PropertyService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/properties")
+@Tag(name = "Properties", description = "Property listing and moderation APIs")
 public class PropertyController {
     private final PropertyService service;
     public PropertyController(PropertyService service) { this.service = service; }
@@ -22,6 +25,7 @@ public class PropertyController {
     }
 
     @GetMapping
+    @Operation(summary = "Get approved properties")
     public ResponseEntity<List<Property>> all(){ return ResponseEntity.ok(service.allApproved()); }
 
     @GetMapping("/admin/all")
@@ -34,6 +38,7 @@ public class PropertyController {
     public ResponseEntity<List<Property>> available(){ return ResponseEntity.ok(service.available()); }
 
     @GetMapping("/search")
+    @Operation(summary = "Search properties with filters and pagination")
     public ResponseEntity<PagedResponse<Property>> search(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Double minPrice,

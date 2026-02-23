@@ -1,7 +1,101 @@
-Rental Property Listing System
+# Rental Property System (Backend)
 
-The Rental Property Listing System is a simple backend application built using Java Spring Boot, designed to manage rental property information through REST APIs. It allows users to add new properties, view all available listings, update existing details, and delete records when needed. The project follows a clean layered architecture with separate Controller, Service, Repository, and Entity packages, making the code easy to maintain and extend.
+Spring Boot backend for a rental listing platform with role-based access, admin moderation, booking lifecycle, and search APIs.
 
-The application uses MySQL as the primary database, and Spring Data JPA is used for smooth interaction with the database. All APIs are fully tested through Postman to ensure correct behavior. To make the project easily deployable, both the Spring Boot application and the MySQL database are containerized using Docker and Docker Compose. This setup ensures consistent behavior across environments and eliminates manual configuration issues.
+This project started as a simple rental property listing system and evolved into a full backend architecture with clear modules (Controller, Service, Repository, Entity), secure JWT auth, and production-style workflows suitable for a major college project.
 
-The project can be run either locally using Maven or inside Docker containers using a single command with Docker Compose. The codebase is structured for clarity, making it suitable for beginners while still reflecting good backend development practices. Future improvements may include adding authentication, implementing a booking module, building a frontend interface, and deploying the application to cloud platforms.
+## Tech Stack
+- Java 17
+- Spring Boot 3
+- Spring Security + JWT
+- Spring Data JPA
+- H2 / MySQL / PostgreSQL
+- OpenAPI (Swagger UI)
+- JUnit 5 + Mockito
+
+## Implemented Features
+- Authentication:
+  - Register (`USER` / `HOST`)
+  - Login with JWT
+  - Admin self-registration blocked
+- Role-based access:
+  - `USER`: browse + create/cancel own bookings
+  - `HOST`: create listings + view own listings/host bookings
+  - `ADMIN`: approve/reject listings + confirm bookings + admin views
+- Property moderation:
+  - `PENDING`, `APPROVED`, `REJECTED`
+  - Public listing endpoints return approved items only
+- Booking lifecycle:
+  - `REQUESTED`, `CONFIRMED`, `CANCELLED`
+  - Date-based booking with overlap validation
+- Search and discovery:
+  - Query + filters + sorting + pagination on properties
+
+## API Docs (Swagger)
+- UI: `http://localhost:8080/swagger-ui/index.html`
+- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+
+Use `Authorize` button in Swagger and pass `Bearer <jwt-token>` for protected endpoints.
+
+## Key Endpoints
+
+### Auth
+- `POST /auth/register`
+- `POST /auth/login`
+
+### Properties
+- `GET /properties`
+- `GET /properties/search`
+- `GET /properties/available`
+- `GET /properties/{id}`
+- `POST /properties` (HOST/ADMIN)
+- `GET /properties/host/my` (HOST/ADMIN)
+- `GET /properties/admin/all` (ADMIN)
+- `GET /properties/admin/pending` (ADMIN)
+- `POST /properties/{id}/approve` (ADMIN)
+- `POST /properties/{id}/reject` (ADMIN)
+
+### Bookings
+- `POST /bookings`
+- `GET /bookings/my`
+- `GET /bookings/host/my` (HOST/ADMIN)
+- `GET /bookings/admin/all` (ADMIN)
+- `POST /bookings/{id}/confirm` (ADMIN)
+- `POST /bookings/{id}/cancel`
+
+## Local Run
+```bash
+cd rental
+./mvnw spring-boot:run
+```
+
+On Windows PowerShell:
+```powershell
+cd rental
+.\mvnw.cmd spring-boot:run
+```
+
+Default DB is in-memory H2 via `src/main/resources/application.properties`.
+
+## Tests
+Run tests:
+```bash
+./mvnw test
+```
+
+Included tests cover:
+- Booking lifecycle validation (service layer)
+- Search/pagination and listing creation behavior (service layer)
+
+## Environment Notes
+- JWT secret is currently in code for local project use.
+- For production-like setup, move secrets to environment variables and secure config.
+
+## Project Value (Resume)
+This project demonstrates:
+- Full-stack ready REST API design
+- Authentication and authorization patterns
+- Moderation workflow modeling
+- Booking lifecycle state management
+- Search/pagination API design
+- Automated testing and API documentation

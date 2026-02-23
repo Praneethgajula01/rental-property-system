@@ -3,6 +3,8 @@ package com.example.rental.controller;
 import com.example.rental.dto.BookingRequest;
 import com.example.rental.dto.BookingResponse;
 import com.example.rental.service.BookingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
+@Tag(name = "Bookings", description = "Booking lifecycle APIs")
 public class BookingController {
     private final BookingService bookingService;
 
@@ -19,6 +22,7 @@ public class BookingController {
     }
 
     @PostMapping
+    @Operation(summary = "Create booking request")
     public ResponseEntity<BookingResponse> createBooking(
             @RequestBody BookingRequest request,
             Authentication authentication
@@ -42,6 +46,7 @@ public class BookingController {
     }
 
     @PostMapping("/{bookingId}/confirm")
+    @Operation(summary = "Confirm booking (admin)")
     public ResponseEntity<BookingResponse> confirm(@PathVariable Long bookingId) {
         return ResponseEntity.ok(bookingService.confirmBooking(bookingId));
     }

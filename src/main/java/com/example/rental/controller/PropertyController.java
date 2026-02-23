@@ -1,5 +1,6 @@
 package com.example.rental.controller;
 
+import com.example.rental.dto.PagedResponse;
 import com.example.rental.model.Property;
 import com.example.rental.service.PropertyService;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,22 @@ public class PropertyController {
 
     @GetMapping("/available")
     public ResponseEntity<List<Property>> available(){ return ResponseEntity.ok(service.available()); }
+
+    @GetMapping("/search")
+    public ResponseEntity<PagedResponse<Property>> search(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean available,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+    ) {
+        return ResponseEntity.ok(
+                service.searchApproved(query, minPrice, maxPrice, available, page, size, sortBy, sortDir)
+        );
+    }
 
     @GetMapping("/host/my")
     public ResponseEntity<List<Property>> hostListings(Authentication authentication) {

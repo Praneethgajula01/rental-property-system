@@ -30,6 +30,8 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll() // Open for login/register
                 .requestMatchers("/properties/admin/**").hasRole("ADMIN")
                 .requestMatchers("/bookings/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/properties/host/my").hasAnyRole("HOST", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/bookings/host/my").hasAnyRole("HOST", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/properties/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/properties").hasAnyRole("ADMIN", "HOST")
                 .requestMatchers(HttpMethod.POST, "/properties/*/approve").hasRole("ADMIN")

@@ -12,6 +12,7 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserIdOrderByCreatedAtDesc(Long userId);
     List<Booking> findAllByOrderByCreatedAtDesc();
+    List<Booking> findByPropertyCreatedByIdOrderByCreatedAtDesc(Long hostUserId);
 
     @Query("""
             SELECT COUNT(b) > 0 FROM Booking b

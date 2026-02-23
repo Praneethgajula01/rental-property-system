@@ -9,4 +9,5 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByAvailableTrue();
     List<Property> findByApprovalStatus(ApprovalStatus approvalStatus);
     List<Property> findByApprovalStatusAndAvailableTrue(ApprovalStatus approvalStatus);
+    List<Property> findByCreatedByIdOrderByIdDesc(Long createdById);
 }

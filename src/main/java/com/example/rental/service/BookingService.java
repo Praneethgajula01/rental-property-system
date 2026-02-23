@@ -92,6 +92,15 @@ public class BookingService {
                 .toList();
     }
 
+    public List<BookingResponse> getHostBookings(String hostUserEmail) {
+        User host = userRepository.findByEmail(hostUserEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return bookingRepository.findByPropertyCreatedByIdOrderByCreatedAtDesc(host.getId())
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public BookingResponse confirmBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found"));

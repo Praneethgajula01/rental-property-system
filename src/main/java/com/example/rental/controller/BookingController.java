@@ -31,6 +31,11 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getMyBookings(authentication.getName()));
     }
 
+    @GetMapping("/host/my")
+    public ResponseEntity<List<BookingResponse>> hostBookings(Authentication authentication) {
+        return ResponseEntity.ok(bookingService.getHostBookings(authentication.getName()));
+    }
+
     @GetMapping("/admin/all")
     public ResponseEntity<List<BookingResponse>> allBookingsForAdmin() {
         return ResponseEntity.ok(bookingService.getAllBookingsForAdmin());

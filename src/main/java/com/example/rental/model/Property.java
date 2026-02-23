@@ -12,6 +12,10 @@ public class Property {
     private Double price;
     private boolean available;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_user_id")
+    private User createdBy;
+
     @Enumerated(EnumType.STRING)
     private PropertyType type = PropertyType.RENT;
 
@@ -62,4 +66,7 @@ public class Property {
 
     public boolean isScouted() { return isScouted; }
     public void setScouted(boolean scouted) { isScouted = scouted; }
+
+    public User getCreatedBy() { return createdBy; }
+    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
 }

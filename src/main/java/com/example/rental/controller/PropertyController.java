@@ -3,6 +3,7 @@ package com.example.rental.controller;
 import com.example.rental.model.Property;
 import com.example.rental.service.PropertyService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class PropertyController {
     public PropertyController(PropertyService service) { this.service = service; }
 
     @PostMapping
-    public ResponseEntity<Property> add(@RequestBody @NonNull Property p){
-        return ResponseEntity.ok(service.add(p));
+    public ResponseEntity<Property> add(@RequestBody @NonNull Property p, Authentication authentication){
+        return ResponseEntity.ok(service.add(p, authentication.getName()));
     }
 
     @GetMapping
@@ -31,16 +32,16 @@ public class PropertyController {
     @GetMapping("/available")
     public ResponseEntity<List<Property>> available(){ return ResponseEntity.ok(service.available()); }
 
+    @GetMapping("/host/my")
+    public ResponseEntity<List<Property>> hostListings(Authentication authentication) {
+        return ResponseEntity.ok(service.listingsByHost(authentication.getName()));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Property> getById(@PathVariable @NonNull Long id){
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/{id}/book")
-    public ResponseEntity<Property> book(@PathVariable @NonNull Long id){
-        return ResponseEntity.ok(service.book(id));
     }
 
     @PostMapping("/{id}/approve")

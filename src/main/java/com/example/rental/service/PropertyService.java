@@ -2,7 +2,9 @@ package com.example.rental.service;
 
 import com.example.rental.model.Property;
 import com.example.rental.model.Property.ApprovalStatus;
+import com.example.rental.model.User;
 import com.example.rental.repo.PropertyRepository;
+import com.example.rental.repo.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,17 @@ import java.util.Optional;
 @Service
 public class PropertyService {
     private final PropertyRepository repo;
-    public PropertyService(PropertyRepository repo) { this.repo = repo; }
+    private final UserRepository userRepository;
 
-    public @NonNull Property add(@NonNull Property p) {
+    public PropertyService(PropertyRepository repo, UserRepository userRepository) {
+        this.repo = repo;
+        this.userRepository = userRepository;
+    }
+
+    public @NonNull Property add(@NonNull Property p, String userEmail) {
+        User host = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        p.setCreatedBy(host);
         p.setApprovalStatus(ApprovalStatus.PENDING);
         return repo.save(p);
     }
@@ -37,22 +47,13 @@ public class PropertyService {
         return repo.findByApprovalStatusAndAvailableTrue(ApprovalStatus.APPROVED);
     }
 
-    public Optional<Property> findById(@NonNull Long id) { return repo.findById(id); }
-
-    public @NonNull Property book(@NonNull Long id) {
-        Property p = repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Property not found"));
-
-        if (p.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Property is not approved for booking");
-        }
-        if (!p.isAvailable()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Property is already unavailable");
-        }
-
-        p.setAvailable(false);
-        return repo.save(p);
+    public List<Property> listingsByHost(String userEmail) {
+        User host = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        return repo.findByCreatedByIdOrderByIdDesc(host.getId());
     }
+
+    public Optional<Property> findById(@NonNull Long id) { return repo.findById(id); }
 
     public @NonNull Property approve(@NonNull Long id) {
         Property p = repo.findById(id)

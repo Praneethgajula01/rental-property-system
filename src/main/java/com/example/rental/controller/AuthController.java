@@ -19,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:5173")
 @Tag(name = "Authentication", description = "User registration and login")
 public class AuthController {
 

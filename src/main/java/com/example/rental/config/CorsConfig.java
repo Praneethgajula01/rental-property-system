@@ -14,9 +14,8 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Allow local frontend dev servers (5173/5174/...)
-        config.addAllowedOriginPattern("http://localhost:*");
-        config.addAllowedOriginPattern("http://127.0.0.1:*");
+        // Keep local dev simple: allow all origins and use token-based auth headers.
+        config.addAllowedOriginPattern("*");
         
         // Allow all HTTP methods
         config.addAllowedMethod("*");
@@ -24,8 +23,8 @@ public class CorsConfig {
         // Allow all headers
         config.addAllowedHeader("*");
         
-        // Allow credentials (cookies, authorization headers)
-        config.setAllowCredentials(true);
+        // No cookies required for this project; JWT is sent in Authorization header.
+        config.setAllowCredentials(false);
         
         // Cache preflight response for 1 hour
         config.setMaxAge(3600L);
